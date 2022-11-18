@@ -8,12 +8,12 @@ module.exports = {
             res.status(500).send({
                 message: 'A server error occured'
             });
-            res.end();
+            return res.end();
         }
         else {
             console.log(error);
             res.status(500).send(error);
-            res.end();
+            return res.end();
         }
     },
     
@@ -21,7 +21,7 @@ module.exports = {
         res.status(404).json({
             message: 'Resource does not exist'
         });
-        res.end();
+        return res.end();
     },
 
     hashPassword: async (raw) => {

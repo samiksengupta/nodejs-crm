@@ -2,14 +2,15 @@ const { handleServerErrorResponse, handleNotFoundResponse, generateAccessToken, 
 const { User } = require("../models");
 
 const register = async (req, res) => {
-    console.log(req.body);
     const user = await User.create({
         name: req.body.name,
         username: req.body.username,
         password: req.body.password,
-        email: req.body.email
+        email: req.body.email,
+        type: req.body.type || undefined,
+        isEnabled: req.body.isEnabled || undefined
     }).catch(error => handleServerErrorResponse(res, error));
-    res.status(201).json(user.toJSON());
+    if(user) res.status(201).json(user.toJSON());
 }
 
 const login = async (req, res) => {
@@ -36,18 +37,18 @@ const logout = (req, res) => {
 const refresh = async (req, res) => {
     const payload = await decodeAccessToken(req.body.accessToken);
     const user = await User.findOne({
-        where: {
-            id: payload.id,
-            refreshToken: req.body.refreshToken
-        }
+        id: payload.id,
+        refreshToken: req.body.refreshToken
     }).catch(error => handleServerErrorResponse(res, error));
-    if(!user) handleNotFoundResponse(res);
-    user.refreshToken = generateRefreshToken();
-    user.save();
-    res.status(200).json({
-        accessToken: generateAccessToken(user),
-        refreshToken: user.refreshToken
-    });
+    if(user) {
+        user.refreshToken = generateRefreshToken();
+        user.save();
+        res.status(200).json({
+            accessToken: generateAccessToken(user),
+            refreshToken: user.refreshToken
+        });
+    }
+    else handleNotFoundResponse(res);
 }
 
 module.exports = {

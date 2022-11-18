@@ -23,7 +23,6 @@ const userSchema = mongoose.Schema({
     },
     type: {
         type: String,
-        required: true,
         enum : ['admin', 'engineer', 'customer'],
         default: 'customer'
     },
@@ -33,6 +32,7 @@ const userSchema = mongoose.Schema({
     },
     refreshToken: {
         type: String,
+        select: false
     },
     createdAt: {
         type: Date,
@@ -63,8 +63,8 @@ const userSchema = mongoose.Schema({
 
 userSchema.pre('save', async function(next) {
     const user = this;
-    if(!user.isModified('password')) return next();
-    user.password = await hashPassword(user.password);
+    if(user.isModified('password')) user.password = await hashPassword(user.password);
+    if(user.isModified('type') && !user.isModified('isEnabled')) user.isEnabled = ['customer'].includes(user.type);
     next();
 })
 
