@@ -8,7 +8,9 @@ composeUri = (username, password, host, db) => {
 module.exports = {
     development: {
         uri: composeUri(process.env.DEV_DB_USERNAME, process.env.DEV_DB_PASSWORD, process.env.DEV_DB_HOSTNAME, process.env.DEV_DB_NAME),
-        options: {}
+        options: {
+            serverSelectionTimeoutMS: 1000
+        }
     },
     test: {
         uri: composeUri(process.env.TEST_DB_USERNAME, process.env.TEST_DB_PASSWORD, process.env.TEST_DB_HOSTNAME, process.env.TEST_DB_NAME),
