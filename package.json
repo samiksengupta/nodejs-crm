@@ -1,0 +1,34 @@
+{
+  "name": "crm",
+  "version": "1.0.0",
+  "description": "A CRM application server built on NodeJS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samiksengupta/nodejs-crm.git"
+  },
+  "keywords": [
+    "nodejs",
+    "crm"
+  ],
+  "author": "Samik Sengupta",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/samiksengupta/nodejs-crm/issues"
+  },
+  "homepage": "https://github.com/samiksengupta/nodejs-crm#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-validator": "^6.14.2",
+    "mongoose": "^6.7.2"
+  }
+}
