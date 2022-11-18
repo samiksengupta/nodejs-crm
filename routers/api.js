@@ -1,8 +1,5 @@
 const express = require('express');
-// const accountController = require('../controllers/account.controller');
 const authController = require('../controllers/auth.controller');
-// const categoryController = require('../controllers/category.controller');
-// const productController = require('../controllers/product.controller');
 // const userController = require('../controllers/user.controller');
 const validator = require('../middlewares/validators');
 const { authenticate, authorize } = require('../middlewares/auth');
@@ -51,12 +48,7 @@ apiRouterSecure.route('/products')
 apiRouterSecure.route('/products/:id')
     .get(productController.read)
     .put(authorize, validator.productUpdate, productController.update)
-    .delete(authorize, productController.destroy);
-
-apiRouterSecure.route('/cart')
-    .get(accountController.getCart)
-    .put(accountController.setCart)
-    .delete(accountController.clearCart); */
+    .delete(authorize, productController.destroy);*/
 
 module.exports = {
     apiRouter: apiRouter, 

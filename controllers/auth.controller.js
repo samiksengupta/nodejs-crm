@@ -2,10 +2,12 @@ const { handleServerErrorResponse, handleNotFoundResponse, generateAccessToken, 
 const { User } = require("../models");
 
 const register = async (req, res) => {
+    console.log(req.body);
     const user = await User.create({
         name: req.body.name,
         username: req.body.username,
-        password: req.body.password
+        password: req.body.password,
+        email: req.body.email
     }).catch(error => handleServerErrorResponse(res, error));
     res.status(201).json(user.toJSON());
 }

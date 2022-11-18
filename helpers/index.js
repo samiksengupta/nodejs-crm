@@ -1,4 +1,4 @@
-/* const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 const server = require("../config/server");
 
@@ -65,4 +65,4 @@ module.exports = {
         }
         return slug;
     },
-}; */
+};
