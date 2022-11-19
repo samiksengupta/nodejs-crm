@@ -1,4 +1,4 @@
-const { isObjectId, handleServerErrorResponse, handleNotFoundResponse } = require("../helpers");
+const { isObjectId, handleServerErrorResponse, handleNotFoundResponse, handleBadRequestResponse } = require("../helpers");
 const { User } = require("../models");
 
 const index = (req, res) => {
@@ -72,9 +72,10 @@ const update = (req, res) => {
 
 const destroy = (req, res) => {
     if(!isObjectId(req.params.id)) return handleNotFoundResponse(res, 'Invalid ID');
+    if(req.params.id === req.user.id) return handleBadRequestResponse(res, 'Cannt delete Self');
     User.findById(req.params.id).then(data => {
         if(data) {
-            data.destroy().then(data => {
+            data.deleteOne({ _id: req.params.id }).then(data => {
                 res.status(200).json(data);
                 res.end();
             }).catch(error => {

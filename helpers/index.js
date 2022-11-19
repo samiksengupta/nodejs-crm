@@ -3,6 +3,13 @@ const jwt = require("jsonwebtoken");
 const server = require("../config/server");
 
 module.exports = {
+    handleBadRequestResponse: (res, message = 'Bad Request') => {
+        res.status(400).json({
+            message: message
+        });
+        return res.end();
+    },
+
     handleNotFoundResponse: (res, message = 'Resource does not exist') => {
         res.status(404).json({
             message: message
