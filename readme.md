@@ -56,7 +56,12 @@ In the console run the following commands:
 node
 require('crypto').randomBytes(64).toString('hex')
 ```
-Copy the cryptographically secure JWT secret and use it as your JWT_SECRET
+OR simply call the package.json script that has been set up to quickly generate a cryptographically secure string
+
+```bash
+npm run crypto
+```
+Copy the cryptographically secure string and use it as your *JWT_SECRET*
 
 When you have set up your database configuration, the following scripts can be used to quickly setup the server.
 
