@@ -49,6 +49,14 @@ PROD_DB_PASSWORD=
 JWT_SECRET=<YOUR JWT SECRET HERE>
 JWT_LIFESPAN=600
 ```
+**Generating a secure JWT Secret**
+
+In the console run the following commands:
+```bash
+node
+require('crypto').randomBytes(64).toString('hex')
+```
+Copy the cryptographically secure JWT secret and use it as your JWT_SECRET
 
 When you have set up your database configuration, the following scripts can be used to quickly setup the server.
 
