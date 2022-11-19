@@ -61,7 +61,7 @@ OR simply call the package.json script that has been set up to quickly generate 
 ```bash
 npm run crypto
 ```
-Copy the cryptographically secure string and use it as your *JWT_SECRET*
+Copy the cryptographically secure string and use it as your `JWT_SECRET`
 
 When you have set up your database configuration, the following scripts can be used to quickly setup the server.
 
