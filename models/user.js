@@ -59,6 +59,10 @@ const userSchema = mongoose.Schema({
                 }
             }
             return false;
+        },
+        async hasEngineers() {
+            const count = await this.count({ role: 'engineer', isEnabled: true });
+            return count > 0;
         }
     }
 });

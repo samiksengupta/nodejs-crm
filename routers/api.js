@@ -3,6 +3,7 @@ const authController = require('../controllers/auth.controller');
 const userController = require('../controllers/user.controller');
 const validator = require('../middlewares/validators');
 const { authenticate, authorize } = require('../middlewares/auth');
+const ticketController = require('../controllers/ticket.controller');
 
 const apiRouter = express.Router();
 const apiRouterSecure = express.Router();
@@ -28,6 +29,15 @@ apiRouterSecure.route('/users/:id')
     .get(authorize, userController.read)
     .put(authorize, validator.userUpdate, userController.update)
     .delete(authorize, userController.destroy);
+
+apiRouterSecure.route('/tickets')
+    .get(authorize, ticketController.index)
+    .post(authorize, validator.ticketCreate, ticketController.create);
+
+apiRouterSecure.route('/tickets/:id')
+    .get(authorize, ticketController.read)
+    .put(authorize, validator.ticketUpdate, ticketController.update)
+    .delete(authorize, ticketController.destroy);
 
 module.exports = {
     apiRouter: apiRouter, 
