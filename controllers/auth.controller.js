@@ -7,7 +7,7 @@ const register = async (req, res) => {
         username: req.body.username,
         password: req.body.password,
         email: req.body.email,
-        type: req.body.type || undefined,
+        role: req.body.role || undefined,
         isEnabled: req.body.isEnabled || undefined
     }).catch(error => handleServerErrorResponse(res, error));
     if(user) res.status(201).json(user.toJSON());

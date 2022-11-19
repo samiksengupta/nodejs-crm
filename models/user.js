@@ -13,7 +13,9 @@ const userSchema = mongoose.Schema({
     },
     password: {
         type: String,
-        required: true,
+        required: function() {
+            return this.isNew;
+        },
         select: false
     },
     email: {
@@ -21,7 +23,7 @@ const userSchema = mongoose.Schema({
         required: true,
         unique: true
     },
-    type: {
+    role: {
         type: String,
         enum : ['admin', 'engineer', 'customer'],
         default: 'customer'

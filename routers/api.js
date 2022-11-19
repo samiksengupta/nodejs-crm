@@ -21,12 +21,12 @@ apiRouter.route('/refresh').post(validator.authRefresh, authController.refresh);
 apiRouterSecure.use(authenticate);
 
 apiRouterSecure.route('/users')
-    .get(userController.index)
-    .post(authorize, userController.create);
+    .get(authorize, userController.index)
+    .post(authorize, validator.userCreate, userController.create);
 
 apiRouterSecure.route('/users/:id')
-    .get(userController.read)
-    .put(authorize, userController.update)
+    .get(authorize, userController.read)
+    .put(authorize, validator.userUpdate, userController.update)
     .delete(authorize, userController.destroy);
 
 module.exports = {

@@ -1,4 +1,5 @@
 const { verifyAccessToken } = require("../helpers");
+const { User } = require("../models");
 
 module.exports = {
     authenticate: async (req, res, next) => {
@@ -11,19 +12,23 @@ module.exports = {
         const payload = await verifyAccessToken(token);
         if(payload) {
             req.user = payload;
-            next();
+            return next();
         }
-        else {
-            res.status(403).send({ message: 'Token invalid or expired' });
-            return;
-        }
+        res.status(403).send({ message: 'Token invalid or expired' });
+        return;
     },
 
     authorize: async (req, res, next) => {
-        if(req.user && req.user.isAdmin) {
-            next();
-        }
-        else {
+        return module.exports.authorizeRoles(['admin'])(req, res, next);
+    },
+
+    authorizeRoles: roles => {
+        return async (req, res, next) => {
+            if(req.user) {
+                const user = await User.findById(req.user.id);
+                const authorized = Array.isArray(roles) ? roles.includes(user.role) : roles === user.role;
+                if(authorized) return next();
+            }
             res.status(403).send({ message: 'Permission not granted' });
             return;
         }

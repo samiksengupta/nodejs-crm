@@ -3,10 +3,17 @@ const jwt = require("jsonwebtoken");
 const server = require("../config/server");
 
 module.exports = {
-    handleServerErrorResponse: (res, error) => {
+    handleNotFoundResponse: (res, message = 'Resource does not exist') => {
+        res.status(404).json({
+            message: message
+        });
+        return res.end();
+    },
+
+    handleServerErrorResponse: (res, error = 'A server error occured') => {
         if(server.ENV === 'production') {
             res.status(500).send({
-                message: 'A server error occured'
+                message: error
             });
             return res.end();
         }
@@ -15,13 +22,6 @@ module.exports = {
             res.status(500).send(error);
             return res.end();
         }
-    },
-    
-    handleNotFoundResponse: (res) => {
-        res.status(404).json({
-            message: 'Resource does not exist'
-        });
-        return res.end();
     },
 
     hashPassword: async (raw) => {
@@ -65,4 +65,6 @@ module.exports = {
         }
         return slug;
     },
+
+    isObjectId: id => id.match(/^[0-9a-fA-F]{24}$/)
 };
