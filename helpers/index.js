@@ -73,5 +73,5 @@ module.exports = {
         return slug;
     },
 
-    isObjectId: id => id.match(/^[0-9a-fA-F]{24}$/)
+    isObjectId: id => `${id}`.match(/^[0-9a-fA-F]{24}$/)
 };

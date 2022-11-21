@@ -1,6 +1,8 @@
 const { default: mongoose } = require("mongoose");
 const { hashPassword, comparePassword } = require("../helpers");
 
+const roles = ['admin', 'engineer', 'customer'];
+
 const userSchema = mongoose.Schema({
     name: {
         type: String,
@@ -25,7 +27,7 @@ const userSchema = mongoose.Schema({
     },
     role: {
         type: String,
-        enum : ['admin', 'engineer', 'customer'],
+        enum: roles,
         default: 'customer'
     },
     isEnabled: {
@@ -51,6 +53,7 @@ const userSchema = mongoose.Schema({
     }
 }, {
     statics: {
+        roles: roles,
         async authenticate(username, password) {
             const user = await this.findOne({ username: username }).select('password');
             if(user) {
@@ -64,13 +67,25 @@ const userSchema = mongoose.Schema({
             const count = await this.count({ role: 'engineer', isEnabled: true });
             return count > 0;
         }
-    }
+    },
+});
+
+userSchema.virtual('isAdmin').get(function() {
+    return ['admin'].includes(this.role);
+});
+
+userSchema.virtual('isEngineer').get(function() {
+    return ['engineer'].includes(this.role);
+});
+
+userSchema.virtual('isCustomer').get(function() {
+    return ['customer'].includes(this.role);
 });
 
 userSchema.pre('save', async function(next) {
     const user = this;
     if(user.isModified('password')) user.password = await hashPassword(user.password);
-    if(user.isModified('type') && !user.isModified('isEnabled')) user.isEnabled = ['customer'].includes(user.type);
+    if(user.isModified('role') && !user.isModified('isEnabled')) user.isEnabled = ['customer'].includes(user.role);
     next();
 })
 

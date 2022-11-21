@@ -1,5 +1,7 @@
 const { default: mongoose } = require("mongoose");
 
+const statuses = ['open', 'closed', 'pending'];
+
 const ticketSchema = mongoose.Schema({
     title: {
         type: String,
@@ -16,7 +18,7 @@ const ticketSchema = mongoose.Schema({
     },
     status: {
         type: String,
-        enum : ['open', 'closed', 'pending'],
+        enum : statuses,
         default: 'open'
     },
     raisedByUser: {
@@ -27,11 +29,13 @@ const ticketSchema = mongoose.Schema({
     },
 }, {
     timestamps: true,
-    methods: {
-        isClosed() {
-            return this.status === 'closed'
-        }
+    statics: {
+        statuses: statuses
     }
+});
+
+ticketSchema.virtual('isClosed').get(function() {
+    return this.status === 'closed';
 });
 
 module.exports = mongoose.model("Ticket", ticketSchema);

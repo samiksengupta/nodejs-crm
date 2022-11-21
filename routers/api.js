@@ -31,13 +31,13 @@ apiRouterSecure.route('/users/:id')
     .delete(authorize, userController.destroy);
 
 apiRouterSecure.route('/tickets')
-    .get(authorize, ticketController.index)
-    .post(authorize, validator.ticketCreate, ticketController.create);
+    .get(ticketController.index)
+    .post(validator.ticketCreate, ticketController.create);
 
 apiRouterSecure.route('/tickets/:id')
-    .get(authorize, ticketController.read)
-    .put(authorize, validator.ticketUpdate, ticketController.update)
-    .delete(authorize, ticketController.destroy);
+    .get(ticketController.read)
+    .put(validator.ticketUpdate, ticketController.update)
+    .delete(ticketController.destroy);
 
 module.exports = {
     apiRouter: apiRouter, 

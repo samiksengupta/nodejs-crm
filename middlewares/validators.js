@@ -55,14 +55,19 @@ module.exports = {
         check('title').trim().escape().not().isEmpty().withMessage('Title cannot be empty').bail().isLength({ min: 3 }).withMessage('Title must be minimum 3 characters').bail(),
         check('description').trim().escape().not().isEmpty().withMessage('Description cannot be empty').bail().isLength({ min: 3 }).withMessage('Description must be minimum 3 characters').bail(),
         check('priority').trim().escape().not().isEmpty().withMessage('Priority cannot be empty').bail().isNumeric().withMessage('Priority must be a number').bail(),
-        check('status').trim().escape().not().isEmpty().withMessage('Status cannot be empty').bail(),
+        check('status').trim().escape().not().isEmpty().withMessage('Status cannot be empty').bail().custom(value => {
+            if(!Ticket.statuses.includes(value)) throw new Error(`Status is invalid. Please provide any of: ${Ticket.statuses.join()}`);
+        }),
         handleValidation
     ],
     ticketUpdate: [
         check('title').optional().trim().escape().not().isEmpty().withMessage('Title cannot be empty').bail().isLength({ min: 3 }).withMessage('Title must be minimum 3 characters').bail(),
         check('description').optional().trim().escape().not().isEmpty().withMessage('Description cannot be empty').bail().isLength({ min: 3 }).withMessage('Description must be minimum 3 characters').bail(),
         check('priority').optional().trim().escape().not().isEmpty().withMessage('Priority cannot be empty').bail().isNumeric().withMessage('Priority must be a number').bail(),
-        check('status').optional().trim().escape().not().isEmpty().withMessage('Status cannot be empty').bail(),
+        check('status').optional().trim().escape().not().isEmpty().withMessage('Status cannot be empty').bail().custom(value => {
+            if(!Ticket.statuses.includes(value)) throw new Error(`Status is invalid. Please provide any of: ${Ticket.statuses.join()}`);
+            return true;
+        }),
         handleValidation
     ],
 }
