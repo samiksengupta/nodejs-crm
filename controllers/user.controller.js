@@ -4,7 +4,6 @@ const { User } = require("../models");
 const index = (req, res) => {
     User.find().then(items => {
         res.status(200).json(items);
-        res.end();
     }).catch(error => {
         handleServerErrorResponse(res, error);
     });

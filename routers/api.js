@@ -4,6 +4,7 @@ const userController = require('../controllers/user.controller');
 const validator = require('../middlewares/validators');
 const { authenticate, authorize } = require('../middlewares/auth');
 const ticketController = require('../controllers/ticket.controller');
+const notificationController = require('../controllers/notification.controller');
 
 const apiRouter = express.Router();
 const apiRouterSecure = express.Router();
@@ -38,6 +39,9 @@ apiRouterSecure.route('/tickets/:id')
     .get(ticketController.read)
     .put(validator.ticketUpdate, ticketController.update)
     .delete(ticketController.destroy);
+
+apiRouterSecure.route('/tickets/:id/notifications').get(notificationController.indexByTicket);
+apiRouterSecure.route('/notifications').post(validator.notificationCreate, notificationController.create);
 
 module.exports = {
     apiRouter: apiRouter, 

@@ -1,4 +1,5 @@
 const { check, validationResult } = require('express-validator');
+const { isObjectId } = require('../helpers');
 const { User, Ticket } = require("../models");
 
 const handleValidation = (req, res, next) => {
@@ -67,6 +68,15 @@ module.exports = {
         check('status').optional().trim().escape().not().isEmpty().withMessage('Status cannot be empty').bail().custom(value => {
             if(!Ticket.statuses.includes(value)) throw new Error(`Status is invalid. Please provide any of: ${Ticket.statuses.join()}`);
             return true;
+        }),
+        handleValidation
+    ],
+    notificationCreate: [
+        check('subject').trim().escape().not().isEmpty().withMessage('Subject cannot be empty').bail().isLength({ min: 3 }).withMessage('Subject must be minimum 3 characters').bail(),
+        check('body').trim().escape().not().isEmpty().withMessage('Body cannot be empty').bail().isLength({ min: 3 }).withMessage('Body must be minimum 3 characters').bail(),
+        check('emails').not().isArray().withMessage('Emails must be an array').bail(),
+        check('ticketId').trim().escape().not().isEmpty().withMessage('Ticket ID cannot be empty').bail().custom(async value => {
+            if(!isObjectId(value) || (await Ticket.count({ _id: value })) < 1) throw new Error(`Ticket is invalid. Please provide valid ticket ID`);
         }),
         handleValidation
     ],

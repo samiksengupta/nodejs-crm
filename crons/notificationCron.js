@@ -1,7 +1,7 @@
 const cron = require('node-cron');
 const { transporter } = require('../config/transporter');
 
-console.log(transporter);
+// console.log(transporter);
 
 module.exports = {
     start: () => {

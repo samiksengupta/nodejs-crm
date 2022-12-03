@@ -7,28 +7,29 @@ module.exports = {
         res.status(400).json({
             message: message
         });
-        return res.end();
+    },
+
+    handleUnauthorizedResponse: (res, message = 'Unauthorized') => {
+        res.status(401).json({
+            message: message
+        });
     },
 
     handleNotFoundResponse: (res, message = 'Resource does not exist') => {
         res.status(404).json({
             message: message
         });
-        return res.end();
     },
 
-    handleServerErrorResponse: (res, error = 'A server error occured') => {
-        if(server.ENV === 'production') {
-            res.status(500).send({
-                message: error
-            });
-            return res.end();
+    handleServerErrorResponse: (res, error) => {
+        if(server.ENV !== 'development') error = undefined;
+        const defaultMessage = 'A server error occured';
+        switch(typeof error) {
+            case 'object': error.message = error.message || defaultMessage; break;
+            case 'string': error = { message: error}
+            default: error = { message: defaultMessage}
         }
-        else {
-            console.log(error);
-            res.status(500).send(error);
-            return res.end();
-        }
+        res.status(500).send(error);
     },
 
     hashPassword: async (raw) => {

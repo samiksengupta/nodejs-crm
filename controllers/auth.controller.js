@@ -1,8 +1,8 @@
-const { handleServerErrorResponse, handleNotFoundResponse, generateAccessToken, generateRefreshToken, verifyAccessToken, decodeAccessToken } = require("../helpers");
+const { handleUnauthorizedResponse, handleNotFoundResponse, handleServerErrorResponse, generateAccessToken, generateRefreshToken, verifyAccessToken, decodeAccessToken } = require("../helpers");
 const { User } = require("../models");
 
 const register = async (req, res) => {
-    const user = await User.create({
+    let user = await User.create({
         name: req.body.name,
         username: req.body.username,
         password: req.body.password,
@@ -10,11 +10,11 @@ const register = async (req, res) => {
         role: req.body.role || undefined,
         isEnabled: req.body.isEnabled || undefined
     }).catch(error => handleServerErrorResponse(res, error));
-    if(user) res.status(201).json(user.toJSON());
+    if(user) res.status(201).json(user);
 }
 
 const login = async (req, res) => {
-    const user = await User.authenticate(req.body.username, req.body.password).catch(error => handleServerErrorResponse(res, error));
+    const user = await User.authenticate(req.body.username, req.body.password).catch(error => handleUnauthorizedResponse(res));
     if(user) {
         user.refreshToken = generateRefreshToken();
         user.save();
@@ -23,9 +23,6 @@ const login = async (req, res) => {
             refreshToken: user.refreshToken
         });
     }
-    else res.status(400).json({
-        message: "Authentication failed"
-    });
 }
 
 const logout = (req, res) => {
