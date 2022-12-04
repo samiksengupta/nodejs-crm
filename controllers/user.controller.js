@@ -1,16 +1,16 @@
 const { isObjectId, handleServerErrorResponse, handleNotFoundResponse, handleBadRequestResponse } = require("../helpers");
 const { User } = require("../models");
 
-const index = (req, res) => {
-    User.find().then(items => {
+const index = async (req, res) => {
+    await User.find().then(items => {
         res.status(200).json(items);
     }).catch(error => {
         handleServerErrorResponse(res, error);
     });
 }
 
-const create = (req, res) => {
-    User.create({
+const create = async (req, res) => {
+    await User.create({
         name: req.body.name,
         username: req.body.username,
         password: req.body.password,
@@ -25,9 +25,9 @@ const create = (req, res) => {
     });
 }
 
-const read = (req, res) => {
+const read = async (req, res) => {
     if(!isObjectId(req.params.id)) return handleNotFoundResponse(res, 'Invalid ID');
-    User.findById(req.params.id).then(data => {
+    await User.findById(req.params.id).then(data => {
         if(data) {
             res.status(200).json(data);
             res.end();
@@ -38,9 +38,9 @@ const read = (req, res) => {
     });
 }
 
-const update = (req, res) => {
-    if(!isObjectId(req.params.id)) return handleNotFoundResponse(res, 'Invalid ID');
-    User.findById(req.params.id).then(data => {
+const update = async (req, res) => {
+    if(!isObjectId(req.params.id)) handleNotFoundResponse(res, 'Invalid ID');
+    await User.findById(req.params.id).then(data => {
         if(data) {
             if(req.body.name) data.name = req.body.name;
             if(req.body.username) data.username = req.body.username;
@@ -58,7 +58,6 @@ const update = (req, res) => {
             }
             else {
                 res.status(200).json(data);
-                res.end();
             }
         }
         else {

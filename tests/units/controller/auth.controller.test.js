@@ -7,25 +7,21 @@ beforeAll(async () => connect());
 beforeEach(async () => clear());
 afterAll(async () => close());
 
-const registerPayload = {
+const payload = {
+    _id: '6378a804b5bbfec8ae71acb3',
     name: 'Test Name',
     username: 'testname',
     password: '123456',
     email: 'test@mail.com'
 };
 
-const loginPayload = {
-    username: 'testname',
-    password: '123456'
-};
-
 describe('register', () => {
-    it('should pass', async () => {
+    it('should respond 201 on success with created object', async () => {
 
         // arrange
         const req = mockRequest();
         const res = mockResponse();
-        req.body = registerPayload;
+        req.body = payload;
 
         // act
         await register(req, res);
@@ -34,28 +30,28 @@ describe('register', () => {
         expect(res.status).toHaveBeenCalledWith(201);
         expect(res.json).toHaveBeenCalledWith(
             expect.objectContaining({
-                name: registerPayload.name,
-                username: registerPayload.username,
-                email: registerPayload.email,
-                role: registerPayload.role || 'customer',
-                isEnabled: registerPayload.isEnabled || registerPayload.role === 'customer' || !registerPayload.role,
+                name: payload.name,
+                username: payload.username,
+                email: payload.email,
+                role: payload.role || 'customer',
+                isEnabled: payload.isEnabled || payload.role === 'customer' || !payload.role,
             })
         );
     })
 
-    it('should fail', async () => {
+    it('should respond 500 on failure with error message', async () => {
 
         // arrange
-        const userSpyCreate = jest.spyOn(User, 'create').mockRejectedValue('error');
+        const spyUserCreate = jest.spyOn(User, 'create').mockRejectedValue('error');
         const req = mockRequest();
         const res = mockResponse();
-        req.body = registerPayload;
+        req.body = payload;
 
         // act
         await register(req, res);
 
         // assert
-        expect(userSpyCreate).toHaveBeenCalled();
+        expect(spyUserCreate).toHaveBeenCalled();
         expect(res.status).toHaveBeenCalledWith(500);
         expect(res.send).toHaveBeenCalledWith(
             expect.objectContaining({
@@ -66,22 +62,22 @@ describe('register', () => {
 });
 
 describe('login', () => {
-    it('should pass', async () => {
+    it('should respond 200 on success with accessToken and refreshToken', async () => {
 
         // arrange
-        const userSpyAuthenticate = jest.spyOn(User, 'authenticate').mockResolvedValue({
-            _id: 1,
+        const spyUserAuthenticate = jest.spyOn(User, 'authenticate').mockResolvedValue({
+            _id: payload._id,
             save: () => {}
         });
         const req = mockRequest();
         const res = mockResponse();
-        req.body = loginPayload;
+        req.body = payload;
 
         // act
         await login(req, res);
 
         // assert
-        expect(userSpyAuthenticate).toHaveBeenCalled();
+        expect(spyUserAuthenticate).toHaveBeenCalled();
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith(
             expect.objectContaining({
@@ -91,19 +87,19 @@ describe('login', () => {
         );
     })
 
-    it('should fail', async () => {
+    it('should respond 401 on failure with error message', async () => {
 
         // arrange
-        const userSpyAuthenticate = jest.spyOn(User, 'authenticate').mockRejectedValue(false);
+        const spyUserAuthenticate = jest.spyOn(User, 'authenticate').mockRejectedValue(false);
         const req = mockRequest();
         const res = mockResponse();
-        req.body = loginPayload;
+        req.body = payload;
 
         // act
         await login(req, res);
 
         // assert
-        expect(userSpyAuthenticate).toHaveBeenCalled();
+        expect(spyUserAuthenticate).toHaveBeenCalled();
         expect(res.status).toHaveBeenCalledWith(401);
         expect(res.json).toHaveBeenCalledWith(
             expect.objectContaining({
