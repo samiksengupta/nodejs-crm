@@ -3,7 +3,8 @@ dotenv.config();
 composeUri = (username, password, host, db) => {
     let userinfo = '';
     if(username || password) userinfo = `${username}:${password}@`;
-    return `mongodb://${userinfo}${host}/${db}`
+    if(db) dbinfo = `/${db}`;
+    return `mongodb://${userinfo}${host}${dbinfo}`
 }
 module.exports = {
     development: {
