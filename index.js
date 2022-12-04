@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(masterRouter);
 
 mongoose.connect(dbConfig.uri, dbConfig.options).catch(err => {
-    process.stdout.write(`Error connecting to DB: ${err}\n`);
+    process.stdout.write(`Error connecting to DB at ${dbConfig.uri}: ${err}\n`);
 });
 
 mongoose.connection.on('connected', () => {
