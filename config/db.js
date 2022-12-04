@@ -2,6 +2,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 composeUri = (username, password, host, db) => {
     let userinfo = '';
+    let dbinfo = '';
     if(username || password) userinfo = `${username}:${password}@`;
     if(db) dbinfo = `/${db}`;
     return `mongodb://${userinfo}${host}${dbinfo}`
