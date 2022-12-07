@@ -1,3 +1,4 @@
+const { default: mongoose } = require("mongoose");
 const { index, create, read, update, destroy } = require("../../../controllers/user.controller");
 const { User } = require("../../../models");
 const { connect, clear, close } = require("../../db");
@@ -48,7 +49,7 @@ describe('index', () => {
         expect(res.json).toHaveBeenCalledWith(
             expect.arrayContaining([
                 expect.objectContaining({
-                    _id: payload._id,
+                    _id: mongoose.Types.ObjectId(payload._id),
                     name: payload.name,
                     username: payload.username,
                     email: payload.email,
